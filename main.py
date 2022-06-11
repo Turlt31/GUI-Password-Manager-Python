@@ -50,7 +50,6 @@ def main(user):
 				posY += 30
 				count += 1
 			
-
 		def add():
 			def addToFile():
 				site, user, pswd = encryptPWD(s.get(), u.get(), p.get())
@@ -100,6 +99,7 @@ def main(user):
 			num = Entry(dele, font=('arial', 20))
 			num.place(x=180, y=75, height=30, width=65)
 			Button(dele, text="Delete", font=('airal', 20), command=deleteFromFile).place(x=20, y=110, height=30, width=210)
+
 		def edit():
 			def load():
 				with open("files/password.txt", 'r') as f:
@@ -121,10 +121,8 @@ def main(user):
 					with open("files/password.txt", 'w') as f:
 							for line in lines:
 								if line == lines[i-1]:
-									print("Hello")
 									f.write(f"{newSite},{newUser},{newPswd}\n")
 								else:
-									print("Goodbye")
 									f.write(line)
 					displayPassword()
 			edit = Toplevel(main)
@@ -150,8 +148,9 @@ def main(user):
 			p = Entry(edit, textvariable=pVar, font=('arial', 14))
 			p.place(x=160, y=195, height=30, width=320)
 
-			Button(edit, text="Save", font=('arial', 20), command=save).place(x=20, y=250, height=30, width=150)
-			Button(edit, text="Load", font=('arial', 20), command=load).place(x=180, y=250, height=30, width=150)
+			Button(edit, text="Save", font=('arial', 20), command=save).place(x=20, y=290, height=30, width=150)
+			Button(edit, text="Load", font=('arial', 20), command=load).place(x=180, y=290, height=30, width=150)
+
 		main = Toplevel(root)
 		main.title("Passwords")
 		main.geometry("480x450")
@@ -267,10 +266,8 @@ def main(user):
 					with open("files/card.txt", 'w') as f:
 							for line in lines:
 								if line == lines[i-1]:
-									print("Hello")
 									f.write(f"{newName},{newNum},{newDate},{newCcv}\n")
 								else:
-									print("Goodbye")
 									f.write(line)
 					displayCard()
 			edit = Toplevel(main)
@@ -343,11 +340,149 @@ def main(user):
 		p.place(x=170, y=115, height=30, width=150)
 		Button(change, text="Save", font=('arial', 20), command=save).place(x=20, y=170, height=35, width=150)	
 
-	Label(root, text=f"Hello {user}!", font=('arial', 25)).place(x=165, y=10)
-	
+	def vault():
+		def displayCrypto():
+			for widget in main.winfo_children():
+				if isinstance(widget, Entry):
+					widget.destroy()
+			f = open('files/vault.txt', 'r')
+			posY = 100
+			count = 1
+			for line in f:
+				addrPriv = line.split(',')
+				deADDR, dePRIV, deNAME = decryptCRO(addrPriv[0], addrPriv[1], addrPriv[2])		
+
+				addr = StringVar()
+				priv = StringVar()
+				name = StringVar()
+				c = StringVar()
+				
+				addr.set(deADDR)
+				priv.set(dePRIV)
+				name.set(deNAME)
+				c.set(count)
+				Entry(main, textvariable=c, font=('arial', 15, 'bold')).place(x=0, y=posY, width=30, height=30)
+				Entry(main, textvariable=addr, font=('arial', 9)).place(x=30,y=posY, width=330, height=30)
+				Entry(main, textvariable=priv, font=('arial', 8)).place(x=360, y=posY, width=640, height=30)
+				Entry(main, textvariable=name, font=('arial', 15)).place(x=1000, y=posY, width=100, height=30)
+				posY += 30
+				count += 1
+			main.geometry(f"1100x{posY}")
+		def add():
+			add = Toplevel(main)
+			add.title("Add")
+			add.geometry("500x300")
+			add.resizable(False, False)
+			def addToFile():
+				addr, priv, name = addrEntry.get(), privEntry.get(), nameEntry.get() 
+				enADDR, enPRIV, enNAME = encryptCRO(addr, priv, name)
+				with open("files/vault.txt", 'a') as f:
+					f.write(f"{enADDR},{enPRIV},{enNAME}\n")
+				displayCrypto()
+				
+			addrEntry = Entry(add, font=('arial', 14))
+			addrEntry.place(x=150, y=60, height=30, width=200)
+			Label(add, text="Adress", font=('arial',20)).place(x=25, y=50)
+			
+			privEntry = Entry(add, font=('arial', 14))
+			privEntry.place(x=150, y=110, height=30, width=200)
+			Label(add, text="Key", font=('arial',20)).place(x=25, y=100)
+			
+			nameEntry = Entry(add, font=('arial', 14))
+			nameEntry.place(x=150, y=160, height=30, width=200)
+			Label(add, text="Name", font=('arial',20)).place(x=25, y=150)
+
+			Label(add, text="Add", font=('arial', 20)).place(x=230, y=10)
+			Button(add, text="Add", font=('arial', 20), command=addToFile).place(x=220, y=230)
+
+		def delete():
+			def deleteFromFile():
+				with open('files/vault.txt', 'r') as f:
+					lines = f.readlines()
+				i = int(num.get())
+				delLine = lines[i-1]
+				with open('files/vault.txt', 'w') as f:
+					for line in lines:
+						if line.strip("\n") != delLine.strip("\n"):	
+							f.write(line) 
+				displayCrypto()
+			dele = Toplevel(main)
+			dele.title("Delete")
+			dele.geometry("300x200")
+			dele.resizable(False, False)
+			
+			Label(dele, text="Delete", font=('arial', 20)).place(x=110, y=10)
+			Label(dele, text="Line Number", font=('arial', 20)).place(x=10, y=70)
+
+			num = Entry(dele, font=('arial', 20))
+			num.place(x=180, y=75, height=30, width=65)
+			Button(dele, text="Delete", font=('airal', 20), command=deleteFromFile).place(x=20, y=110, height=30, width=210)
+
+		def edit():
+			def load():
+				with open("files/vault.txt", 'r') as f:
+					lines = f.readlines()
+				i = int(num.get())
+				line = lines[i-1]
+				line = line.split(',')
+				ENaddr, ENpriv, ENname = line[0], line[1], line[2]
+				DEaddr, DEpriv, DEname = decryptCRO(line[0], line[1], line[2])
+				aVar.set(DEaddr)
+				pVar.set(DEpriv)
+				nVar.set(DEname)
+
+			def save():
+					newAddr, newPriv, newName = encryptCRO(a.get(), p.get(), n.get())
+					with open("files/vault.txt", 'r') as f:
+						lines = f.readlines()
+					i = int(num.get())
+					with open("files/vault.txt", 'w') as f:
+							for line in lines:
+								if line == lines[i-1]:
+									f.write(f"{newAddr},{newPriv},{newName}\n")
+								else:
+									f.write(line)
+					displayCrypto()
+			edit = Toplevel(main)
+			edit.title("Edit")
+			edit.geometry("500x350")
+			edit.resizable(False, False)
+
+			Label(edit, text="Edit", font=('arial', 20)).place(x=230, y=10)
+
+			Label(edit, text="Line Number", font=('arial', 20)).place(x=20, y=70)
+			num = Entry(edit, font=('arial', 20))
+			num.place(x=180, y=75, height=30, width=65)
+
+			Label(edit, text="Addres", font=('arial', 20)).place(x=20, y=110)
+			Label(edit, text="Key", font=('arial', 20)).place(x=20, y=150)
+			Label(edit, text="Name", font=('arial', 20)).place(x=20, y=190)
+
+			aVar, pVar, nVar = StringVar(), StringVar(), StringVar()
+			a = Entry(edit, textvariable=aVar, font=('arial', 14))
+			a.place(x=160, y=115, height=30, width=320)
+			p = Entry(edit, textvariable=pVar, font=('arial', 14))
+			p.place(x=160, y=155, height=30, width=320)
+			n = Entry(edit, textvariable=nVar, font=('arial', 14))
+			n.place(x=160, y=195, height=30, width=320)
+			Button(edit, text="Save", font=('arial', 20), command=save).place(x=20, y=290, height=30, width=150)
+			Button(edit, text="Load", font=('arial', 20), command=load).place(x=180, y=290, height=30, width=150)
+
+		main = Toplevel(root)
+		main.title("Vault")
+		main.geometry("1100x300")
+		main.resizable(False, False)
+		Button(main, text="Add", font=('arial', 15), command=add).place(x=10, y=10, height=40, width=80)
+		Button(main, text="Delete", font=('arial', 15), command=delete).place(x=10, y=55, height=40, width=80)
+		Button(main, text="Edit", font=('arial', 15), command=edit).place(x=95, y=10, height=40, width=80)
+		Button(main, text="Reload", font=('arial', 15), command=displayCrypto).place(x=1000, y=10, height=40, width=80)
+		displayCrypto()
+
+	Label(root, text=f"Hello {user}!", font=('arial', 25)).place(x=165, y=10)	
 	Button(root, text="Passwords", font=('arial', 20), command=passwords).place(x=35, y=75, height=40, width=150)
 	Button(root, text="Cards", font=('arial', 20), command=cards).place(x=35, y=130, height=40, width=150)
 	Button(root, text="Change Password", font=('arial', 12), command=changePass).place(x=35, y=185, height=40, width=150)
+	Button(root, text="Crypto Vault", font=('arial', 16), command=vault).place(x=205, y=75, height=40, width=150)
 
 def login():
 	passwd = passwordEntry.get()

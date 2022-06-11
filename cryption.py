@@ -103,6 +103,48 @@ def decryptCRD(name, num, date, ccv):
 			decryptedC += chr(ord(letter) - 5) 
 	return decryptedN, decryptedNU, decryptedD, decryptedC
 
+def encryptCRO(addr, priv, name):
+	encryptedA, encryptedP, encryptedN = "", "", ""
+	key = get_key()	
+
+	for letter in addr:
+		if letter == " ":
+			encryptedA += " "
+		else:
+			encryptedA += chr(ord(letter) + 5)
+	for letter in priv:
+		if letter == " ":
+			encryptedP += " "
+		else:
+			encryptedP += chr(ord(letter) + 5)
+	for letter in name:
+		if letter == " ":
+			encryptedN += " "
+		else:
+			encryptedN += chr(ord(letter) + 5)
+	return Fernet(key).encrypt(encryptedA.encode()).decode(), Fernet(key).encrypt(encryptedP.encode()).decode(), Fernet(key).encrypt(encryptedN.encode()).decode()
+
+def decryptCRO(addr, priv, name):
+	decryptedA, decryptedP, decryptedN = "", "", ""
+	key = get_key()	
+
+	addr, priv, name = Fernet(key).decrypt(addr.encode()).decode(), Fernet(key).decrypt(priv.encode()).decode(), Fernet(key).decrypt(name.encode()).decode()
+	for letter in addr:
+		if letter == " ":
+			decryptedA += " "
+		else:
+			decryptedA += chr(ord(letter) - 5)
+	for letter in priv:
+		if letter == " ":
+			decryptedP += " "
+		else:
+			decryptedP += chr(ord(letter) - 5)
+	for letter in name:
+		if letter == " ":
+			decryptedN += " "
+		else:
+			decryptedN += chr(ord(letter) - 5)
+	return decryptedA, decryptedP, decryptedN
 
 def encryptpsw(pasw):
 	encryptedP = ""
@@ -114,5 +156,4 @@ def encryptpsw(pasw):
 			encryptedP += chr(ord(letter) + 5)
 	return sha256(bytes(encryptedP, 'utf-8')).hexdigest()
 
-print(encryptpsw("Test123"))
 
