@@ -8,8 +8,6 @@ root.title("Password Manager")
 root.geometry("500x250")
 root.resizable(False, False)
 
-# root.deiconify() re-open a window
-
 def main(user):
 	for widget in root.winfo_children():
 		widget.destroy()
