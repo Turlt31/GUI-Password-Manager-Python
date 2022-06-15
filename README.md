@@ -19,5 +19,6 @@ pip install pyinstaller
 pyinstaller --onefile -w main.py
 ```
 After that 2 new folders will apear in the same directory  
-You can safely delete "build" and in "dist" will be the .exe file  
+You can safely delete "build"   
+And in "dist" will be the .exe file  
 Move the .exe file in to the same directory where the .py file is
