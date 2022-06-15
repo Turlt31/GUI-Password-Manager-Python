@@ -9,5 +9,5 @@ Encryption:
   * Sha256 for the Master password
   * Cryptograpy.fernet for the accounts
 
-Has an account system that creates seperet folders for each account
+Has an account system that creates seperet folders for each account  
 And a diffrent key for Encryption and Decryption
