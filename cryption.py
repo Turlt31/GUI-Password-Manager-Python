@@ -1,13 +1,17 @@
 from cryptography.fernet import Fernet
 from hashlib import sha256
 
-def get_key():
-	with open('files/key.key', 'rb') as f:
+def get_key(user):
+	with open(f'files/{user}/key.key', 'rb') as f:
 		return f.read()
+def make_key(user):
+	key = Fernet.generate_key()
+	with open(f"files/{user}/key.key", 'wb') as f:
+		f.write(key)
 
-def encryptPWD(site, user, pasw):
+def encryptPWD(name, site, user, pasw):
 	encryptedS, encryptedU, encryptedP = "", "", ""
-	key = get_key()
+	key = get_key(name)
 
 	for letter in site:
 		if letter == ' ':
@@ -25,11 +29,9 @@ def encryptPWD(site, user, pasw):
 		else:
 			encryptedP += chr(ord(letter) + 5) 
 	return Fernet(key).encrypt(encryptedS.encode()).decode(), Fernet(key).encrypt(encryptedU.encode()).decode(), Fernet(key).encrypt(encryptedP.encode()).decode()
-
-
-def decryptPWD(site, user, pasw):
+def decryptPWD(name, site, user, pasw):
 	decryptedS, decryptedU, decryptedP = "", "", ""
-	key = get_key()
+	key = get_key(name)
 
 	site, user, pasw = Fernet(key).decrypt(site.encode()).decode(), Fernet(key).decrypt(user.encode()).decode(), Fernet(key).decrypt(pasw.encode()).decode()	
 	for letter in site:
@@ -49,10 +51,9 @@ def decryptPWD(site, user, pasw):
 			decryptedP += chr(ord(letter) - 5) 
 	return decryptedS, decryptedU, decryptedP
 
-
-def encryptCRD(name, num, date, ccv):
+def encryptCRD(user, name, num, date, ccv):
 	encryptedN, encryptedNU, encryptedD, encryptedC = "", "", "", ""
-	key = get_key()
+	key = get_key(user)
 
 	for letter in name:
 		if letter == ' ':
@@ -75,10 +76,9 @@ def encryptCRD(name, num, date, ccv):
 		else:
 			encryptedC += chr(ord(letter) + 5) 
 	return Fernet(key).encrypt(encryptedN.encode()).decode(), Fernet(key).encrypt(encryptedNU.encode()).decode(), Fernet(key).encrypt(encryptedD.encode()).decode(), Fernet(key).encrypt(encryptedC.encode()).decode()
-
-def decryptCRD(name, num, date, ccv):
+def decryptCRD(user, name, num, date, ccv):
 	decryptedN, decryptedNU, decryptedD, decryptedC = "", "", "", ""
-	key = get_key()
+	key = get_key(user)
 
 	name, num, date, ccv = Fernet(key).decrypt(name.encode()).decode(), Fernet(key).decrypt(num.encode()).decode(), Fernet(key).decrypt(date.encode()).decode(), Fernet(key).decrypt(ccv.encode()).decode()	
 	for letter in name:
@@ -103,9 +103,9 @@ def decryptCRD(name, num, date, ccv):
 			decryptedC += chr(ord(letter) - 5) 
 	return decryptedN, decryptedNU, decryptedD, decryptedC
 
-def encryptCRO(addr, priv, name):
+def encryptCRO(user, addr, priv, name):
 	encryptedA, encryptedP, encryptedN = "", "", ""
-	key = get_key()	
+	key = get_key(user)	
 
 	for letter in addr:
 		if letter == " ":
@@ -123,10 +123,9 @@ def encryptCRO(addr, priv, name):
 		else:
 			encryptedN += chr(ord(letter) + 5)
 	return Fernet(key).encrypt(encryptedA.encode()).decode(), Fernet(key).encrypt(encryptedP.encode()).decode(), Fernet(key).encrypt(encryptedN.encode()).decode()
-
-def decryptCRO(addr, priv, name):
+def decryptCRO(user, addr, priv, name):
 	decryptedA, decryptedP, decryptedN = "", "", ""
-	key = get_key()	
+	key = get_key(user)	
 
 	addr, priv, name = Fernet(key).decrypt(addr.encode()).decode(), Fernet(key).decrypt(priv.encode()).decode(), Fernet(key).decrypt(name.encode()).decode()
 	for letter in addr:
@@ -148,12 +147,9 @@ def decryptCRO(addr, priv, name):
 
 def encryptpsw(pasw):
 	encryptedP = ""
-	key = get_key()
 	for letter in pasw:
 		if letter == ' ':
 			encryptedP += ' '
 		else:
 			encryptedP += chr(ord(letter) + 5)
 	return sha256(bytes(encryptedP, 'utf-8')).hexdigest()
-
-
