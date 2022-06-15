@@ -13,7 +13,7 @@ Has an account system that creates seperet folders for each account
 And a diffrent key for Encryption and Decryption
 
 
-For a .exe version run the following commands  
+For a .exe version run the following commands in the same directory as the .py file  
 ```
 pip install pyinstaller
 pyinstaller --onefile -w main.py
