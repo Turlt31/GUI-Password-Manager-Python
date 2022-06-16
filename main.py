@@ -13,14 +13,14 @@ def main(user):
 	for widget in root.winfo_children():
 		widget.destroy()
 
-	Label (root, text=f"Hello {user}!",  font=('arial', 25)).place(x=165, y=10)	
-	Button(root, text="Passwords",       font=('arial', 19), command=lambda:apps.passwords(root, user)  ).place(x=20, y=75,   height=40, width=150)
-	Button(root, text="Cards",           font=('arial', 20), command=lambda:apps.cards(root, user)      ).place(x=20, y=130,  height=40, width=150)
-	Button(root, text="Change Password", font=('arial', 12), command=lambda:apps.changePass(root, user) ).place(x=20, y=185,  height=40, width=150)
-	Button(root, text="Crypto Vault",    font=('arial', 16), command=lambda:apps.vault(root, user)      ).place(x=190, y=75,  height=40, width=150)
-	Button(root, text="Notes",           font=('arial', 20), command=lambda:apps.notes(root, user)      ).place(x=190, y=130, height=40, width=150)
-	Button(root, text="Log Out",         font=('arial', 16), command=login).place(x=360, y=75, height=40, width=150)
+	Label (root, text=f"Hello {user}!", font=('arial', 25)).place(x=165, y=10)	
+	Button(root, text="Passwords", font=('arial', 19), command=lambda:apps.passwords(root, user)).place(x=20, y=75,   height=40, width=150)
+	Button(root, text="Cards", font=('arial', 20), command=lambda:apps.cards(root, user)).place(x=20, y=130,  height=40, width=150)
+	Button(root, text="Crypto Vault", font=('arial', 16), command=lambda:apps.vault(root, user)).place(x=20, y=185,  height=40, width=150)
+	Button(root, text="Notes", font=('arial', 20), command=lambda:apps.notes(root, user)).place(x=190, y=75, height=40, width=150)
+	Button(root, text="Log Out", font=('arial', 16), command=login).place(x=360, y=75, height=40, width=150)
 	Button(root, text="Delete Account", font=('arial', 14), command=lambda:apps.delete(root, user)).place(x=360, y=130, height=40, width=150)
+	Button(root, text="Change Password", font=('arial', 12), command=lambda:apps.changePass(root, user) ).place(x=360, y=185,  height=40, width=150)
 
 def login():
 	for widget in root.winfo_children():
