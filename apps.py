@@ -68,7 +68,8 @@ def passwords(root, user):
 					main.geometry(f"970x{posY+50}")
 					posY1 += 30
 			posY += 30
-			count += 1	
+			count += 1
+		main.title(f"Passwords | Total: {count-1}")
 	def add(user):
 		def addToFile(name):
 			site, user, pswd = encryptPWD(name, s.get(), u.get(), p.get())
@@ -208,7 +209,8 @@ def cards(root, user):
 			Entry(main, textvariable=cVar, font=('arial', 12)).place(x=413, y=posY, height=30, width=87)
 			posY += 30
 			count += 1
-		main.geometry(f"500x{posY+50}")	
+		main.geometry(f"500x{posY+50}")
+		main.title(f"Cards | Total: {count-1}")
 	def add(user):
 		def addToFile(user):
 			name, num, date, ccv = encryptCRD(user, n.get(), nu.get(), d.get(), c.get())
@@ -385,6 +387,7 @@ def vault(root, user):
 				posY += 30
 				count += 1
 			main.geometry(f"1100x{posY}")
+			main.title(f"Vault | Total: {count-1}")
 		def add(user):
 			add = Toplevel(main)
 			add.title("Add")
