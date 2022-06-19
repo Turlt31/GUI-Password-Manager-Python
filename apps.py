@@ -524,6 +524,7 @@ def notes(root, user):
 
 def delete(root, user):
 	def deleteFromFile(user):
+		if p.get() != "":
 			with open(f'files/login.txt', 'r') as f:
 				lines = f.readlines()
 			delAcc = encryptpsw(p.get()) + "," + user
@@ -532,6 +533,8 @@ def delete(root, user):
 					if delAcc != line.strip("\n"):	
 						f.write(line)
 			shutil.rmtree(f"files/{user}")
+		else:
+			pass
 	main = Toplevel(root)
 	main.title("Delete")
 	main.geometry("400x250")
