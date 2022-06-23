@@ -1,5 +1,7 @@
 from tkinter import *
 from cryption import *
+import random
+import string
 import shutil
 import os
 
@@ -33,44 +35,50 @@ def passwords(root, user):
 			pVar.set(pwd)
 			if show == True:
 				if count <= 15:	
-					Entry(main, textvariable=cVar, font=('arial', 15, 'bold')).place(x=0,y=posY, height=30, width=30)
+					Entry(main, textvariable=cVar, font=('arial', 15, 'bold'), justify="center").place(x=0,y=posY, height=30, width=30)
 					Entry(main, textvariable=sVar, font=('arial', 15)).place(x=30,y=posY, height=30, width=103)
-					Entry(main, textvariable=uVar, font=('arial', 12)).place(x=133, y=posY, height=30, width=240)
-					Entry(main, textvariable=pVar, font=('arial', 12), show="*").place(x=373, y=posY, height=30, width=117)
-					a.place(x=390, y=10)
-					b.place(x=390, y=55)
-					main.geometry(f"480x{posY+50}")
+					Entry(main, textvariable=uVar, font=('arial', 12)).place(x=133, y=posY, height=30, width=250)
+					Entry(main, textvariable=pVar, font=('arial', 12), show="*").place(x=383, y=posY, height=30, width=117)
+					a.place(x=410, y=10)
+					b.place(x=410, y=55)
+					main.geometry(f"500x{posY+30}")
 				else:
-					Entry(main, textvariable=cVar, font=('arial', 15, 'bold')).place(x=490,y=posY1, height=30, width=30)
+					Entry(main, textvariable=cVar, font=('arial', 15, 'bold'), justify="center").place(x=490,y=posY1, height=30, width=30)
 					Entry(main, textvariable=sVar, font=('arial', 15)).place(x=520,y=posY1, height=30, width=103)
 					Entry(main, textvariable=uVar, font=('arial', 12)).place(x=623, y=posY1, height=30, width=240)
 					Entry(main, textvariable=pVar, font=('arial', 12), show="*").place(x=863, y=posY1, height=30, width=117)
 					a.place(x=880, y=10)
 					b.place(x=880, y=55)
-					main.geometry(f"970x{posY+50}")
+					main.geometry(f"970x{posY+30}")
 					posY1 += 30
 			elif show == False:
 				if count <= 15:	
-					Entry(main, textvariable=cVar, font=('arial', 15, 'bold')).place(x=0,y=posY, height=30, width=30)
+					Entry(main, textvariable=cVar, font=('arial', 15, 'bold'), justify="center").place(x=0,y=posY, height=30, width=30)
 					Entry(main, textvariable=sVar, font=('arial', 15)).place(x=30,y=posY, height=30, width=103)
-					Entry(main, textvariable=uVar, font=('arial', 12)).place(x=133, y=posY, height=30, width=240)
-					Entry(main, textvariable=pVar, font=('arial', 12)).place(x=373, y=posY, height=30, width=117)
-					a.place(x=390, y=10)
-					b.place(x=390, y=55)
-					main.geometry(f"480x{posY+50}")
+					Entry(main, textvariable=uVar, font=('arial', 12)).place(x=133, y=posY, height=30, width=250)
+					Entry(main, textvariable=pVar, font=('arial', 12)).place(x=383, y=posY, height=30, width=117)
+					a.place(x=410, y=10)
+					b.place(x=410, y=55)
+					main.geometry(f"500x{posY+30}")
 				else:
-					Entry(main, textvariable=cVar, font=('arial', 15, 'bold')).place(x=490,y=posY1, height=30, width=30)
+					Entry(main, textvariable=cVar, font=('arial', 15, 'bold'), justify="center").place(x=490,y=posY1, height=30, width=30)
 					Entry(main, textvariable=sVar, font=('arial', 15)).place(x=520,y=posY1, height=30, width=103)
 					Entry(main, textvariable=uVar, font=('arial', 12)).place(x=623, y=posY1, height=30, width=240)
 					Entry(main, textvariable=pVar, font=('arial', 12)).place(x=863, y=posY1, height=30, width=117)
 					a.place(x=880, y=10)
 					b.place(x=880, y=55)
-					main.geometry(f"970x{posY+50}")
+					main.geometry(f"970x{posY+30}")
 					posY1 += 30
 			posY += 30
 			count += 1
 		main.title(f"Passwords | Total: {count-1}")
+		main.geometry(f"500x{posY}")
 	def add(user):
+		def genPass():
+			chars = string.ascii_letters + string.digits
+			pVar = StringVar()
+			pVar.set("".join(random.sample(chars, 10)))
+			p.config(textvariable=pVar)
 		def addToFile(name):
 			site, user, pswd = encryptPWD(name, s.get(), u.get(), p.get())
 			with open(f'files/{name}/password.txt', 'a') as f:
@@ -95,7 +103,8 @@ def passwords(root, user):
 		p = Entry(add, font=('arial', 15))
 		p.place(x=160, y=165, height=30, width=180)
 
-		Button(add, text="Add", font=('arial', 18), command=lambda:addToFile(user)).place(x=30, y=200, height=30, width=290)
+		Button(add, text="Add", font=('arial', 18), command=lambda:addToFile(user)).place(x=25, y=200, height=35, width=150)
+		Button(add, text="Generate Password", font=('arial', 13), command=genPass).place(x=185, y=200, height=35, width=150)
 	def delete(user):
 		def deleteFromFile(user):
 			with open(f'files/{user}/password.txt', 'r') as f:
@@ -172,15 +181,15 @@ def passwords(root, user):
 
 	main = Toplevel(root)
 	main.title("Passwords")
-	main.geometry("480x450")
+	main.geometry("500x450")
 	main.resizable(False, False)
 	Button(main, text="Add", font=('arial', 15), command=lambda:add(user)).place(x=10, y=10, height=40, width=80)
 	Button(main, text="Delete", font=('arial', 15), command=lambda:delete(user)).place(x=10, y=55, height=40, width=80)
 	Button(main, text="Edit", font=('arial', 15), command=lambda:edit(user)).place(x=95, y=10, height=40, width=80)
-	a=Button(main, text="Reload", font=('arial', 15), command=lambda:updateP(show))
-	a.place(x=390, y=10, height=40, width=80)
+	a=Button(main, text="Reload", font=('arial', 15), command=lambda:updateP(show, user))
+	a.place(x=410, y=10, height=40, width=80)
 	b = Button(main, text="Show", font=('arial', 15), command=lambda:showPassword(user))
-	b.place(x=390, y=55, height=40, width=80)
+	b.place(x=410, y=55, height=40, width=80)
 	updateP(show, user)
 
 def cards(root, user):
@@ -209,7 +218,7 @@ def cards(root, user):
 			Entry(main, textvariable=cVar, font=('arial', 12)).place(x=413, y=posY, height=30, width=87)
 			posY += 30
 			count += 1
-		main.geometry(f"500x{posY+50}")
+		main.geometry(f"500x{posY}")
 		main.title(f"Cards | Total: {count-1}")
 	def add(user):
 		def addToFile(user):
@@ -325,44 +334,8 @@ def cards(root, user):
 	Button(main, text="Add", font=('arial', 15), command=lambda:add(user)).place(x=10, y=10, height=40, width=80)
 	Button(main, text="Delete", font=('arial', 15), command=lambda:delete(user)).place(x=10, y=55, height=40, width=80)
 	Button(main, text="Edit", font=('arial', 15), command=lambda:edit(user)).place(x=95, y=10, height=40, width=80)
-	Button(main, text="Reload", font=('arial', 15), command=lambda:updateC(user)).place(x=390, y=10, height=40, width=80)
+	Button(main, text="Reload", font=('arial', 15), command=lambda:updateC(user)).place(x=410, y=10, height=40, width=80)
 	updateC(user)
-
-def changePass(root, user):
-	def save():
-		with open('files/login.txt', 'r') as f:
-			lines = f.readlines()
-		uOLD, pOLD, uNEW, pNEW = user, encryptpsw(pp.get()), u.get(), encryptpsw(p.get())
-		with open('files/login.txt', 'w') as f: 
-			for line in lines:
-				if line.strip("\n") == f"{pOLD},{uOLD}":
-					if uNEW == "":
-						f.write(f"{pNEW},{uOLD}\n")
-					elif pNEW == "":
-						f.write(f"{pOLD},{uNEW}\n")
-						os.rename(f"files/{uOLD}", f"files/{uNEW}")
-					else:
-						f.write(f"{pNEW},{uNEW}\n")
-						os.rename(f"files/{uOLD}", f"files/{uNEW}")
-				else:
-					f.write(line)
-	
-	change = Toplevel(root)
-	change.title("Change Password")
-	change.geometry("400x300")
-	
-	Label(change, text="Change Password/Username", font=('arial', 20)).place(x=20,y=10)
-
-	Label(change, text="Username", font=('arial',20)).place(x=20,y=70)
-	Label(change, text="Password", font=('arial',20)).place(x=20,y=110)
-	Label(change, text="Old Password", font=('arial',16)).place(x=20,y=155)
-	u = Entry(change, font=('arial', 16))
-	u.place(x=170, y=75, height=30, width=150)
-	p = Entry(change, font=('arial', 16))
-	p.place(x=170, y=115, height=30, width=150)
-	pp = Entry(change, font=('arial', 16))
-	pp.place(x=170, y=155, height=30, width=150)
-	Button(change, text="Save", font=('arial', 20), command=save).place(x=20, y=200, height=35, width=150)	
 
 def vault(root, user):
 		def updateV(user):
@@ -521,6 +494,42 @@ def notes(root, user):
 		a = Text(main, font=('arial', 14))
 		a.place(x=0, y=80, height=420, width=550)
 		load(user)
+
+def changePass(root, user):
+	def save():
+		with open('files/login.txt', 'r') as f:
+			lines = f.readlines()
+		uOLD, pOLD, uNEW, pNEW = user, encryptpsw(pp.get()), u.get(), encryptpsw(p.get())
+		with open('files/login.txt', 'w') as f: 
+			for line in lines:
+				if line.strip("\n") == f"{pOLD},{uOLD}":
+					if uNEW == "":
+						f.write(f"{pNEW},{uOLD}\n")
+					elif pNEW == "":
+						f.write(f"{pOLD},{uNEW}\n")
+						os.rename(f"files/{uOLD}", f"files/{uNEW}")
+					else:
+						f.write(f"{pNEW},{uNEW}\n")
+						os.rename(f"files/{uOLD}", f"files/{uNEW}")
+				else:
+					f.write(line)
+	
+	change = Toplevel(root)
+	change.title("Change Password")
+	change.geometry("400x300")
+	
+	Label(change, text="Change Password/Username", font=('arial', 20)).place(x=20,y=10)
+
+	Label(change, text="Username", font=('arial',20)).place(x=20,y=70)
+	Label(change, text="Password", font=('arial',20)).place(x=20,y=110)
+	Label(change, text="Old Password", font=('arial',16)).place(x=20,y=155)
+	u = Entry(change, font=('arial', 16))
+	u.place(x=170, y=75, height=30, width=150)
+	p = Entry(change, font=('arial', 16))
+	p.place(x=170, y=115, height=30, width=150)
+	pp = Entry(change, font=('arial', 16))
+	pp.place(x=170, y=155, height=30, width=150)
+	Button(change, text="Save", font=('arial', 20), command=save).place(x=20, y=200, height=35, width=150)	
 
 def delete(root, user):
 	def deleteFromFile(user):
