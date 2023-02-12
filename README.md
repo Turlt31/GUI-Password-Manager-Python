@@ -3,7 +3,6 @@
 Can safely store:
   1. Passwords, Usernames
   2. Credit/Debit cards
-  3. Crypto Addreses, private keys, names
 
 Encryption:
   * Sha256 for the Master password
