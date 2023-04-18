@@ -11,7 +11,7 @@ Encryption:
 Features:
   * Account system
   * Two-Factor Authentication
-  * Scroll bar (Im really exited about it lmoa)
+  * Scroll bar (Im really excited about it lmoa)
 
 For a .exe version run the following commands in the same directory as the .py file  
 ```
