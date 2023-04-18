@@ -1,13 +1,18 @@
 from tkinter import *
 from cryption import *
+from PIL import ImageTk, Image
 import random
 import string
 import shutil
+import qrcode
+import json
 import os
 
 show = True
 
 def password(display, controls, user):
+    for widget in controls.winfo_children(): widget.destroy()
+            
     def add(user):
         def genPass():
             chars = string.ascii_letters + string.digits
@@ -115,8 +120,8 @@ def password(display, controls, user):
         Button(edit, text="Load", font=('arial', 20), command=lambda:load(user)).place(x=180, y=290, height=30, width=150)
     def updateP(show, name):
         for widget in display.winfo_children():
-            if isinstance(widget, Entry):
-                widget.destroy()
+            widget.destroy()
+        
         f = open(f'files/{name}/password.txt', 'r')
         posY = 120
         count = 1
@@ -129,18 +134,20 @@ def password(display, controls, user):
             sVar.set(site)
             uVar.set(user)
             pVar.set(pwd)
-            if show == True:
+            if show:
                 Entry(display, textvariable=cVar, font=('arial', 20, 'bold'), justify="center").place(x=0,y=posY, height=50, width=40)
                 Entry(display, textvariable=sVar, font=('arial', 20)).place(x=40,y=posY, height=50, width=163)
                 Entry(display, textvariable=uVar, font=('arial', 20)).place(x=193, y=posY, height=50, width=550)
                 Entry(display, textvariable=pVar, font=('arial', 20), show="●").place(x=740, y=posY, height=50, width=260)
-            elif show == False:
+            else:
                 Entry(display, textvariable=cVar, font=('arial', 20, 'bold'), justify="center").place(x=0,y=posY, height=50, width=40)
                 Entry(display, textvariable=sVar, font=('arial', 20)).place(x=40,y=posY, height=50, width=153)
                 Entry(display, textvariable=uVar, font=('arial', 20)).place(x=193, y=posY, height=50, width=550)
                 Entry(display, textvariable=pVar, font=('arial', 20)).place(x=740, y=posY, height=50, width=260)
             posY += 50
             count += 1
+        Label(controls, text="Passwords", font=('arial', 40), bg="#4a4a4a").place(x=355, y=10)
+        Label(controls, text=f"Count: {count-1}", font=('arial', 25), bg="#4a4a4a").place(x=400, y=65)
     def showPassword(user):
         global show
         show = not show
@@ -159,10 +166,11 @@ def password(display, controls, user):
     updateP(show, user)
 
 def card(display, controls, user):
+    for widget in controls.winfo_children(): widget.destroy()
+            
     def updateC(show, user):
-        for widget in display.winfo_children():
-            if isinstance(widget, Entry):
-                widget.destroy()
+        for widget in display.winfo_children(): widget.destroy()
+            
         f = open(f'files/{user}/card.txt', 'r')
         posY = 120
         count = 1
@@ -176,10 +184,11 @@ def card(display, controls, user):
             dVar.set(date)
             cVar.set(ccv)
             if show == True:
-                replacement = "●●●● ●●●●"
-                size = len(num)
-                num = num.replace(num[size - 9:], replacement)
-                nuVar.set(num)
+                size = len(num)   
+                if size == 19:
+                    nuVar.set(num.replace(num[size - 9:], "●●●● ●●●●"))
+                elif size == 16:
+                    nuVar.set(num.replace(num[size - 8:], "●●●●●●●●"))
                 Entry(display, textvariable=coVar, font=('arial', 20, 'bold'), justify="center").place(x=0,   y=posY, height=50, width=40)
                 Entry(display, textvariable=nVar,  font=('arial', 22)).place(x=40,  y=posY, height=50, width=350)
                 Entry(display, textvariable=nuVar, font=('arial', 22)).place(x=350, y=posY, height=50, width=350)
@@ -194,6 +203,8 @@ def card(display, controls, user):
                 Entry(display, textvariable=cVar,  font=('arial', 22)).place(x=850, y=posY, height=50, width=150)
             posY += 50
             count += 1
+        Label(controls, text="Cards", font=('arial', 40), bg="#4a4a4a").place(x=390, y=10)
+        Label(controls, text=f"Count: {count-1}", font=('arial', 25), bg="#4a4a4a").place(x=400, y=65)
     def add(user):
         def addToFile(user):
             name, num, date, ccv = encryptCRD(user, n.get(), nu.get(), d.get(), c.get())
@@ -316,6 +327,101 @@ def card(display, controls, user):
     b.place(x=916, y=70, height=50, width=95)
     updateC(show, user)
 
+def settings(display, controls, user): 
+    for widget in display.winfo_children(): widget.destroy()
+    for widget in controls.winfo_children(): widget.destroy()  
+        
+    def changePWD():
+        for widget in display.winfo_children(): widget.destroy()
+            
+        def save(user):
+            with open('files/login.txt', 'r') as f:
+                lines = f.readlines()
+            oldP, newP = encryptpsw(op.get()), encryptpsw(np.get())
+            with open('files/login.txt', 'w') as f: 
+                for line in lines:
+                    if line.strip("\n") == f"{oldP},{user}":
+                        f.write(f"{newP},{user}\n")
+                        Label(display, text="Password was changed!", font=('arial', 30), bg="white").place(x=100, y=450)
+                    else:
+                        f.write(line)
 
-def settings(display, controls, user):
-    pass
+        Label(display, text="Old Password", font=('arial', 30), bg="white").place(x=100, y=250)
+        Label(display, text="New Password", font=('arial', 30), bg="white").place(x=100, y=320)
+
+        op = Entry(display, font=('arial', 20))
+        op.place(x=380, y=255, width=250, height=40)
+        np = Entry(display, font=('arial', 20))
+        np.place(x=380, y=325, width=250, height=40)
+
+        Button(display, text="Save", font=('arial', 25), command=lambda:save(user)).place(x=120, y=380, width=250, height=50)
+    def deleteACC():
+        for widget in display.winfo_children(): widget.destroy()
+
+        def delete(user):
+            if p.get() != "":
+                with open(f'files/login.txt', 'r') as f:
+                    lines = f.readlines()
+                delAcc = encryptpsw(p.get()) + "," + user
+                with open(f'files/login.txt', 'w') as f:
+                    for line in lines:
+                        if delAcc != line.strip("\n"):	
+                            f.write(line)
+                shutil.rmtree(f"files/{user}")
+            else:
+                pass
+
+        Label(display, text="Are you sure?", font=('arial', 35), bg="white").place(x=150, y=200)
+        Label(display, text="Password", font=('arial', 27), bg="white").place(x=70, y=265)
+
+        p = Entry(display, font=('arial', 20))
+        p.place(x=250, y=270, width=250, height=40)
+
+        Button(display, text="Delete", font=('arial', 25), command=lambda:delete(user)).place(x=150, y=320, height=50, width=250)
+    def otp():
+        for widget in display.winfo_children(): widget.destroy()
+        with open(f'files/{user}/config/otp.json', 'r') as f: data = json.load(f)
+        key = data["key"] 
+        def active():
+            with open(f'files/{user}/config/otp.json', 'r') as f:
+                data = json.load(f)
+
+            aOTP = data["active"]
+            aOTP = not aOTP
+            
+            if aOTP:
+                activeOTP.config(text="On")
+                otpText.config(text="Two-Factor Authentication is Active")
+            else:
+                activeOTP.config(text="Off")
+                otpText.config(text="Two-Factor Authentication is Disabled")
+
+            with open(f'files/{user}/config/otp.json', 'w') as f:
+                json.dump({"active":aOTP, "key":data['key']}, f)
+            
+        if data['active']: data = "On"; otpT = "Two-Factor Authentication is Active"
+        else: data = "Off"; otpT = "Two-Factor Authentication is Disabled"
+
+        
+        uri = pyotp.totp.TOTP(key).provisioning_uri(name=user, issuer_name="")
+        qrcode.make(uri).save(f'files/{user}/config/temp.png')
+        img = ImageTk.PhotoImage(Image.open(f"files/{user}/config/temp.png").resize((350, 350)))
+        os.remove(f"files/{user}/config/temp.png")
+
+        imgLabel = Label(display)
+        imgLabel.place(x=0, y=325)
+        imgLabel.image = img
+        imgLabel['image'] = imgLabel.image
+
+        Label(display, text="Two-Factor Authentication", font=('arial', 30)).place(x=10, y=140)
+        Label(display, text="Scan this QR code\nIn your authenticator app", font=('arial', 20)).place(x=25, y=280)
+        otpText = Label(display, text=otpT, font=('arial', 20))
+        otpText.place(x=15, y=200)
+        activeOTP = Button(display, text=data, font=('arial', 25), command=lambda:active())
+        activeOTP.place(x=500, y=140, height=50, width=80)
+    
+    Label(controls, text="Settings", font=('arial', 40), bg="#4a4a4a").place(x=380, y=10)
+
+    Button(controls, text="Change Password", font=('arial', 20), command=changePWD).place(x=10, y=10, height=50, width=230)
+    Button(controls, text="Delete Account",  font=('arial', 20), command=deleteACC).place(x=10, y=70, height=50, width=230)
+    Button(controls, text="2 FA",  font=('arial', 20), command=otp).place(x=776, y=10, height=50, width=230)

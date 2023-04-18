@@ -1,13 +1,23 @@
 from cryptography.fernet import Fernet
 from hashlib import sha256
+import base64
+import pyotp
+import json
 
 def get_key(user):
-	with open(f'files/{user}/key.key', 'rb') as f:
+	with open(f'files/{user}/config/key.key', 'rb') as f:
 		return f.read()
 def make_key(user):
 	key = Fernet.generate_key()
-	with open(f"files/{user}/key.key", 'wb') as f:
+	with open(f"files/{user}/config/key.key", 'wb') as f:
 		f.write(key)
+
+	key = pyotp.random_base32()
+	with open(f"files/{user}/config/otp.json", 'r') as f:
+		data = json.load(f)
+	with open(f"files/{user}/config/otp.json", 'w') as f:
+		json.dump({'active':data['active'], 'key':key}, f)
+
 
 def encryptPWD(name, site, user, pasw):
 	encryptedS, encryptedU, encryptedP = "", "", ""
