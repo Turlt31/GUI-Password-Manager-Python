@@ -8,9 +8,10 @@ Encryption:
   * Sha256 for the Master password
   * Cryptograpy.fernet for the accounts
 
-Has an account system that creates seperet folders for each account  
-And a diffrent key for Encryption and Decryption
-
+Features:
+  * Account system
+  * Two-Factor Authentication
+  * Scroll bar (Im really exited about it lmoa)
 
 For a .exe version run the following commands in the same directory as the .py file  
 ```
