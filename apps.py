@@ -327,6 +327,32 @@ def card(display, controls, user):
     b.place(x=916, y=70, height=50, width=95)
     updateC(show, user)
 
+def notes(display, controls, user):
+    for widget in controls.winfo_children(): widget.destroy()
+
+    def load(user):
+        with open(f"files/{user}/notes.txt" , 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                a.insert(END, line)
+    def save(user):
+        contents = a.get(1.0, END)
+        with open(f"files/{user}/notes.txt", 'w') as f:
+            f.write(contents)
+    def clear():
+        contents = a.get(1.0, END)
+        for i in contents:
+            a.replace(1.0, END, i, "")
+
+    Label(controls, text="Notes", font=('arial', 40), bg="#4a4a4a").place(x=385, y=10)
+
+    Button(controls, text="Load", font=('arial', 25), command=lambda:load(user)).place(x=10, y=10, height=50, width=95)
+    Button(controls, text="Save", font=('arial', 25), command=lambda:save(user)).place(x=916, y=10, height=50, width=95)
+    Button(controls, text="Clear", font=('arial', 25), command=clear).place(x=916, y=70, height=50, width=95)
+    a = Text(display, font=('arial', 14))
+    a.place(x=0, y=130, height=2000, width=1016)
+    load(user)
+
 def settings(display, controls, user): 
     for widget in display.winfo_children(): widget.destroy()
     for widget in controls.winfo_children(): widget.destroy()  
@@ -342,12 +368,12 @@ def settings(display, controls, user):
                 for line in lines:
                     if line.strip("\n") == f"{oldP},{user}":
                         f.write(f"{newP},{user}\n")
-                        Label(display, text="Password was changed!", font=('arial', 30), bg="white").place(x=100, y=450)
+                        Label(display, text="Password was changed!", font=('arial', 30)).place(x=100, y=450)
                     else:
                         f.write(line)
 
-        Label(display, text="Old Password", font=('arial', 30), bg="white").place(x=100, y=250)
-        Label(display, text="New Password", font=('arial', 30), bg="white").place(x=100, y=320)
+        Label(display, text="Old Password", font=('arial', 30)).place(x=100, y=250)
+        Label(display, text="New Password", font=('arial', 30)).place(x=100, y=320)
 
         op = Entry(display, font=('arial', 20))
         op.place(x=380, y=255, width=250, height=40)
@@ -371,8 +397,8 @@ def settings(display, controls, user):
             else:
                 pass
 
-        Label(display, text="Are you sure?", font=('arial', 35), bg="white").place(x=150, y=200)
-        Label(display, text="Password", font=('arial', 27), bg="white").place(x=70, y=265)
+        Label(display, text="Are you sure?", font=('arial', 35)).place(x=150, y=200)
+        Label(display, text="Password", font=('arial', 27)).place(x=70, y=265)
 
         p = Entry(display, font=('arial', 20))
         p.place(x=250, y=270, width=250, height=40)
