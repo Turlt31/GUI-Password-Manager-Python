@@ -45,6 +45,7 @@ def main(user):
 
     Button(menu, text="Password",  font=("arial", 25), command=lambda:apps.password(displayFrame, controls, user)).place(x=10, y=150, height=50, width=230)
     Button(menu, text="Card"    ,  font=("arial", 25), command=lambda:apps.card(displayFrame, controls, user)    ).place(x=10, y=210, height=50, width=230)
+    Button(menu, text="Notes"   ,  font=("arial", 25), command=lambda:apps.notes(displayFrame, controls, user)   ).place(x=10, y=270, height=50, width=230)
     Button(menu, text="Settings" , font=("arial", 25), command=lambda:apps.settings(displayFrame, controls, user)).place(x=10, y=610, height=50, width=230)
     Button(menu, text="Logout"   , font=("arial", 25), command=login).place(x=10, y=550, height=50, width=230)
 
@@ -54,6 +55,7 @@ def login():
 
     def checkLogin():
         def otp():
+            def on_return(event): authenticate()
             def authenticate():
                 with open(f"files/{user}/config/otp.json", 'r') as f: data = json.load(f) 
                 totp = pyotp.TOTP(data['key'])
@@ -69,23 +71,27 @@ def login():
             Label(otpS, text="Code", font=('arial', 20)).place(x=15, y=70)
             code = Entry(otpS, font=('arial', 20))
             code.place(x=100, y=73, height=35, width=200)
+            code.bind("<Return>", on_return)
             Button(otpS, text="Authenticate", font=('arial', 20), command=authenticate).place(x=310, y=73, height=35, width=180)
 
         user = u.get()
         pswd = encryptpsw(p.get())
-        with open(f'files/{user}/config/otp.json', 'r') as f:
-            data = json.load(f)
+        with open(f'files/{user}/config/otp.json', 'r') as f: data = json.load(f)
         otpON = data['active']
+
+        e = Label(root, font=('arial', 25), bg="#303030", fg="#f70a22")
+        e.place(x=350, y=480)
 
         with open(f'files/login.txt', 'r') as f:
             logins =  f.readlines()
         for i in logins:
             i = i.split(',')
             if pswd == i[0].strip('\n') and user == i[1].strip('\n'):
+                e.destroy()
                 if otpON: otp()
                 else: main(user.strip('\n'))
             else:
-                continue
+                e.config(text="Error: Incorrect Password or Username")
     def register():
         def addToFile():
             username = u.get()
@@ -96,7 +102,7 @@ def login():
             os.mkdir(f"files/{username}")
             os.mkdir(f"files/{username}/config")
 
-            [open(f"files/{username}/{file}", 'w').close() for file in ["card.txt", "password.txt"]]
+            [open(f"files/{username}/{file}", 'w').close() for file in ["card.txt", "password.txt", "notes.txt"]]
             [open(f"files/{username}/config/{file}", 'w').close() for file in ["otp.json"]]
 
             with open(f'files/{username}/config/otp.json', 'w') as f: json.dump({"active":False, "key":""}, f)
@@ -119,7 +125,7 @@ def login():
 
         Button(rect, text="Register", font=("arial", 28), command=addToFile).place(x=20, y=130, height=60, width=150)
         Button(rect, text="Back", font=('arial', 28), command=returnB).place(x=385, y=200, height=45, width=110)
-    
+    def on_return(event): checkLogin()
     rect = Canvas(root, width=500, height=250, bg="white", highlightthickness=0)
     rect.place(relx=0.5, rely=0.5, anchor=CENTER)
     
@@ -139,6 +145,7 @@ def login():
     p = Entry(rect, font=("arial", 18), show="●")
     p.place(x=220, y=130, width=200, height=35)
 
+    p.bind("<Return>", on_return)
     Button(rect, text="Login", font=("arial", 30), command=checkLogin).place(x=60, y=180, height=60, width=150)
     Button(rect, text="Register", font=("arial", 28), command=register).place(x=300, y=180, height=60, width=150)
 
