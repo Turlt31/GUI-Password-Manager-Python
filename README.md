@@ -12,6 +12,7 @@ Features:
   * Account system
   * Two-Factor Authentication
   * Scroll bar (Im really excited about it lmoa)
+  * Has a text editor (Notes)
 
 For a .exe version run the following commands in the same directory as the .py file  
 ```
