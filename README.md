@@ -23,3 +23,7 @@ After that 2 new folders will apear in the same directory
 You can safely delete "build"   
 And in "dist" will be the .exe file  
 Move the .exe file in to the same directory where the .py file is
+
+If you have any suggestions 
+
+DM me on discord: Turtl3#8839
