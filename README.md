@@ -9,7 +9,7 @@ Encryption:
   * Cryptograpy.fernet for the accounts
 
 Features:
-  * Account system
+  * Multiple Accounts
   * Two-Factor Authentication
   * Scroll bar (Im really excited about it lmoa)
   * Has a text editor (Notes)
