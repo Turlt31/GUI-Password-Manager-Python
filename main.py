@@ -76,31 +76,31 @@ def login():
 
         user = u.get()
         pswd = encryptpsw(p.get())
-        with open(f'files/{user}/config/otp.json', 'r') as f: data = json.load(f)
-        otpON = data['active']
 
         e = Label(root, font=('arial', 25), bg="#303030", fg="#f70a22")
-        e.place(x=350, y=480)
+        e.place(x=385, y=470)
 
         with open(f'files/login.txt', 'r') as f:
             logins =  f.readlines()
         for i in logins:
             i = i.split(',')
-            if pswd == i[0].strip('\n') and user == i[1].strip('\n'):
-                e.destroy()
-                if otpON: otp()
-                else: main(user.strip('\n'))
-            else:
-                e.config(text="Error: Incorrect Password or Username")
+            if pswd == i[0] and user == i[1].strip('\n'):
+                with open(f'files/{user}/config/otp.json', 'r') as f: data = json.load(f)
+                otpON = data['active']
+
+                if otpON: otp(); e.destroy()
+                else: main(user.strip('\n')); e.destroy()
+            elif pswd == [0] or user == i[1].strip('\n'): e.config(text="Error: Incorrect Password or Username")
+            else: e.config(text="Error: Account does not exist")
     def register():
         def addToFile():
             username = u.get()
             password = p.get()
 
-            with open('files/login.txt', 'a') as f: f.write(f"{encryptpsw(password)},{username}\n")
-
             os.mkdir(f"files/{username}")
             os.mkdir(f"files/{username}/config")
+
+            with open('files/login.txt', 'a') as f: f.write(f"{encryptpsw(password)},{username}\n")
 
             [open(f"files/{username}/{file}", 'w').close() for file in ["card.txt", "password.txt", "notes.txt"]]
             [open(f"files/{username}/config/{file}", 'w').close() for file in ["otp.json"]]
@@ -124,7 +124,7 @@ def login():
         p.place(x=200, y=80, width=200, height=35)
 
         Button(rect, text="Register", font=("arial", 28), command=addToFile).place(x=20, y=130, height=60, width=150)
-        Button(rect, text="Back", font=('arial', 28), command=returnB).place(x=385, y=200, height=45, width=110)
+        Button(rect, text="Back", font=('arial', 28), command=returnB).place(x=375, y=190, height=45, width=110)
     def on_return(event): checkLogin()
     rect = Canvas(root, width=500, height=250, bg="white", highlightthickness=0)
     rect.place(relx=0.5, rely=0.5, anchor=CENTER)
