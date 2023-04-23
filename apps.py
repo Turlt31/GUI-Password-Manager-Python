@@ -1,6 +1,6 @@
+from PIL import ImageTk, Image
 from tkinter import *
 from cryption import *
-from PIL import ImageTk, Image
 import random
 import string
 import shutil
@@ -8,9 +8,11 @@ import qrcode
 import json
 import os
 
-show = True
+showP = True
+showC = True
 
 def password(display, controls, user):
+    global showP
     for widget in controls.winfo_children(): widget.destroy()
             
     def add(user):
@@ -24,7 +26,7 @@ def password(display, controls, user):
             with open(f'files/{name}/password.txt', 'a') as f:
                 f.write(f"{site},{user},{pswd}\n")
             Label(add, text="Successfully added", font=('arial', 20)).place(x=20, y=250)
-            updateP(show, name)
+            updateP(showP, name)
         add = Toplevel(display)
         add.title("Add Password")
         add.geometry("400x300")
@@ -55,7 +57,7 @@ def password(display, controls, user):
                 for line in lines:
                     if line.strip("\n") != delLine.strip("\n"):	
                         f.write(line) 
-            updateP(show, user)
+            updateP(showP, user)
         dele = Toplevel(display)
         dele.title("Delete")
         dele.geometry("300x200")
@@ -92,7 +94,7 @@ def password(display, controls, user):
                                 f.write(f"{newSite},{newUser},{newPswd}\n")
                             else:
                                 f.write(line)
-                updateP(show, user)
+                updateP(showP, user)
         edit = Toplevel(display)
         edit.title("Edit")
         edit.geometry("500x350")
@@ -123,7 +125,7 @@ def password(display, controls, user):
             widget.destroy()
         
         f = open(f'files/{name}/password.txt', 'r')
-        posY = 120
+        posY = 0
         count = 1
         for line in f:
             entitySplit = line.split(",")
@@ -149,30 +151,31 @@ def password(display, controls, user):
         Label(controls, text="Passwords", font=('arial', 40), bg="#4a4a4a").place(x=355, y=10)
         Label(controls, text=f"Count: {count-1}", font=('arial', 25), bg="#4a4a4a").place(x=400, y=65)
     def showPassword(user):
-        global show
-        show = not show
-        if show:
+        global showP
+        showP = not showP
+        if showP:
             b.config(text="Show")
         else:
             b.config(text="Hide")
-        updateP(show, user)
+        updateP(showP, user)
 
     Button(controls, text="Add", font=('arial', 25), command=lambda:add(user)).place(x=10, y=10, height=50, width=95)
     Button(controls, text="Delete", font=('arial', 25), command=lambda:delete(user)).place(x=10, y=70, height=50, width=95)
     Button(controls, text="Edit", font=('arial', 25), command=lambda:edit(user)).place(x=115, y=10, height=50, width=95)
-    Button(controls, text="Reload", font=('arial', 21), command=lambda:updateP(show, user)).place(x=916, y=10, height=50, width=95)
+    Button(controls, text="Reload", font=('arial', 21), command=lambda:updateP(showP, user)).place(x=916, y=10, height=50, width=95)
     b = Button(controls, text="Show", font=('arial', 25), command=lambda:showPassword(user))
     b.place(x=916, y=70, height=50, width=95)
-    updateP(show, user)
+    updateP(showP, user)
 
 def card(display, controls, user):
+    global showC
     for widget in controls.winfo_children(): widget.destroy()
             
     def updateC(show, user):
         for widget in display.winfo_children(): widget.destroy()
             
         f = open(f'files/{user}/card.txt', 'r')
-        posY = 120
+        posY = 0
         count = 1
         for line in f:
             entitySplit = line.split(",")
@@ -211,7 +214,7 @@ def card(display, controls, user):
             with open(f'files/{user}/card.txt', 'a') as f:
                 f.write(f"{name},{num},{date},{ccv}\n")
             Label(add, text="Successfully added", font=('arial', 20)).place(x=20, y=40)
-            updateC(show, user)
+            updateC(showC, user)
         add = Toplevel(display)
         add.title("Add Card")
         add.geometry("400x300")
@@ -244,7 +247,7 @@ def card(display, controls, user):
                 for line in lines:
                     if line.strip("\n") != delLine.strip("\n"):	
                         f.write(line) 
-            updateC(show, user)
+            updateC(showC, user)
         dele = Toplevel(display)
         dele.title("Delete")
         dele.geometry("300x200")
@@ -281,7 +284,7 @@ def card(display, controls, user):
                                 f.write(f"{newName},{newNum},{newDate},{newCcv}\n")
                             else:
                                 f.write(line)
-                updateC(show, user)
+                updateC(showP, user)
         edit = Toplevel(display)
         edit.title("Edit")
         edit.geometry("500x350")
@@ -311,24 +314,25 @@ def card(display, controls, user):
         Button(edit, text="Save", font=('arial', 20), command=lambda:save(user)).place(x=20, y=290, height=30, width=150)
         Button(edit, text="Load", font=('arial', 20), command=lambda:load(user)).place(x=180, y=290, height=30, width=150)
     def showCard(user):
-        global show
-        show = not show
-        if show:
+        global showC
+        showC = not showC
+        if showC:
             b.config(text="Show")
         else:
             b.config(text="Hide")
-        updateC(show, user)
+        updateC(showC, user)
 
     Button(controls, text="Add", font=('arial', 25), command=lambda:add(user)).place(x=10, y=10, height=50, width=95)
     Button(controls, text="Delete", font=('arial', 25), command=lambda:delete(user)).place(x=10, y=70, height=50, width=95)
     Button(controls, text="Edit", font=('arial', 25), command=lambda:edit(user)).place(x=115, y=10, height=50, width=95)
-    Button(controls, text="Reload", font=('arial', 21), command=lambda:updateC(show, user)).place(x=916, y=10, height=50, width=95)
+    Button(controls, text="Reload", font=('arial', 21), command=lambda:updateC(showC, user)).place(x=916, y=10, height=50, width=95)
     b = Button(controls, text="Show", font=('arial', 25), command=lambda:showCard(user))
     b.place(x=916, y=70, height=50, width=95)
-    updateC(show, user)
+    updateC(showC, user)
 
 def notes(display, controls, user):
     for widget in controls.winfo_children(): widget.destroy()
+    for widget in display.winfo_children(): widget.destroy()
 
     def load(user):
         with open(f"files/{user}/notes.txt" , 'r') as f:
@@ -350,15 +354,18 @@ def notes(display, controls, user):
     Button(controls, text="Save", font=('arial', 25), command=lambda:save(user)).place(x=916, y=10, height=50, width=95)
     Button(controls, text="Clear", font=('arial', 25), command=clear).place(x=916, y=70, height=50, width=95)
     a = Text(display, font=('arial', 14))
-    a.place(x=0, y=130, height=2000, width=1016)
+    a.place(x=0, y=0, height=2000, width=1016)
     load(user)
 
 def settings(display, controls, user): 
     for widget in display.winfo_children(): widget.destroy()
     for widget in controls.winfo_children(): widget.destroy()  
-        
+    option = StringVar()
+
     def changePWD():
         for widget in display.winfo_children(): widget.destroy()
+        option.set("Change Password")
+        s.place(x=315, y=75)
             
         def save(user):
             with open('files/login.txt', 'r') as f:
@@ -368,21 +375,23 @@ def settings(display, controls, user):
                 for line in lines:
                     if line.strip("\n") == f"{oldP},{user}":
                         f.write(f"{newP},{user}\n")
-                        Label(display, text="Password was changed!", font=('arial', 30)).place(x=100, y=450)
+                        Label(display, text="Password was changed!", font=('arial', 30)).place(x=10, y=350)
                     else:
                         f.write(line)
 
-        Label(display, text="Old Password", font=('arial', 30)).place(x=100, y=250)
-        Label(display, text="New Password", font=('arial', 30)).place(x=100, y=320)
+        Label(display, text="Old Password", font=('arial', 30)).place(x=10, y=20)
+        Label(display, text="New Password", font=('arial', 30)).place(x=10, y=90)
 
         op = Entry(display, font=('arial', 20))
-        op.place(x=380, y=255, width=250, height=40)
+        op.place(x=310, y=25, width=250, height=40)
         np = Entry(display, font=('arial', 20))
-        np.place(x=380, y=325, width=250, height=40)
+        np.place(x=310, y=95, width=250, height=40)
 
-        Button(display, text="Save", font=('arial', 25), command=lambda:save(user)).place(x=120, y=380, width=250, height=50)
+        Button(display, text="Save", font=('arial', 25), command=lambda:save(user)).place(x=20, y=150, width=250, height=50)
     def deleteACC():
         for widget in display.winfo_children(): widget.destroy()
+        option.set("Delete Account")
+        s.place(x=345, y=75)
 
         def delete(user):
             if p.get() != "":
@@ -397,21 +406,21 @@ def settings(display, controls, user):
             else:
                 pass
 
-        Label(display, text="Are you sure?", font=('arial', 35)).place(x=150, y=200)
-        Label(display, text="Password", font=('arial', 27)).place(x=70, y=265)
+        Label(display, text="Are you sure?", font=('arial', 35)).place(x=10, y=10)
+        Label(display, text="Password", font=('arial', 27)).place(x=10, y=70)
 
         p = Entry(display, font=('arial', 20))
-        p.place(x=250, y=270, width=250, height=40)
+        p.place(x=190, y=75, width=250, height=40)
 
-        Button(display, text="Delete", font=('arial', 25), command=lambda:delete(user)).place(x=150, y=320, height=50, width=250)
+        Button(display, text="Delete", font=('arial', 25), command=lambda:delete(user)).place(x=10, y=130, height=50, width=250)
     def otp():
         for widget in display.winfo_children(): widget.destroy()
+        option.set("2FA")
+        s.place(x=430, y=75)
         with open(f'files/{user}/config/otp.json', 'r') as f: data = json.load(f)
         key = data["key"] 
         def active():
-            with open(f'files/{user}/config/otp.json', 'r') as f:
-                data = json.load(f)
-
+            with open(f'files/{user}/config/otp.json', 'r') as f: data = json.load(f)
             aOTP = data["active"]
             aOTP = not aOTP
             
@@ -435,18 +444,19 @@ def settings(display, controls, user):
         os.remove(f"files/{user}/config/temp.png")
 
         imgLabel = Label(display)
-        imgLabel.place(x=0, y=325)
+        imgLabel.place(x=0, y=195)
         imgLabel.image = img
         imgLabel['image'] = imgLabel.image
 
-        Label(display, text="Two-Factor Authentication", font=('arial', 30)).place(x=10, y=140)
-        Label(display, text="Scan this QR code\nIn your authenticator app", font=('arial', 20)).place(x=25, y=280)
+        Label(display, text="Two-Factor Authentication", font=('arial', 30)).place(x=10, y=10)
+        Label(display, text="Scan this QR code\nIn your authenticator app", font=('arial', 20)).place(x=25, y=150)
         otpText = Label(display, text=otpT, font=('arial', 20))
-        otpText.place(x=15, y=200)
+        otpText.place(x=15, y=70)
         activeOTP = Button(display, text=data, font=('arial', 25), command=lambda:active())
-        activeOTP.place(x=500, y=140, height=50, width=80)
-    
+        activeOTP.place(x=500, y=10, height=50, width=80)
+
     Label(controls, text="Settings", font=('arial', 40), bg="#4a4a4a").place(x=380, y=10)
+    s = Label(controls, textvariable=option, font=('arial', 30), bg="#4a4a4a")
 
     Button(controls, text="Change Password", font=('arial', 20), command=changePWD).place(x=10, y=10, height=50, width=230)
     Button(controls, text="Delete Account",  font=('arial', 20), command=deleteACC).place(x=10, y=70, height=50, width=230)
