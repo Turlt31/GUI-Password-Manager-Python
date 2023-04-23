@@ -11,6 +11,7 @@ root.title("Password Manager")
 root.geometry("1266x668")
 root.resizable(False, False)
 root.configure(bg="#303030")
+root.iconbitmap('icon/pwm.ico')
 
 def main(user):
     for widget in root.winfo_children(): widget.destroy
@@ -28,7 +29,7 @@ def main(user):
                 display.yview_scroll(-1, "units")
 
     display = Canvas(root, scrollregion=(0,0,1000,2000))
-    display.place(x=250, y=0, width=1016, height=700)
+    display.place(x=250, y=130, width=1016, height=700)
 
     displayFrame = Frame(display, width=1016, height=2000)
 
@@ -43,17 +44,17 @@ def main(user):
 
     Label(menu, text=f"Hello {user}!", font=("arial", 32), bg="#303030", fg="white").place(x=5, y=10)
 
-    Button(menu, text="Password",  font=("arial", 25), command=lambda:apps.password(displayFrame, controls, user)).place(x=10, y=150, height=50, width=230)
-    Button(menu, text="Card"    ,  font=("arial", 25), command=lambda:apps.card(displayFrame, controls, user)    ).place(x=10, y=210, height=50, width=230)
-    Button(menu, text="Notes"   ,  font=("arial", 25), command=lambda:apps.notes(displayFrame, controls, user)   ).place(x=10, y=270, height=50, width=230)
+    Button(menu, text="Password",  font=("arial", 25), command=lambda:apps.password(displayFrame, controls, user)).place(x=10, y=130, height=50, width=230)
+    Button(menu, text="Card"    ,  font=("arial", 25), command=lambda:apps.card(displayFrame, controls, user)    ).place(x=10, y=190, height=50, width=230)
+    Button(menu, text="Notes"   ,  font=("arial", 25), command=lambda:apps.notes(displayFrame, controls, user)   ).place(x=10, y=250, height=50, width=230)
     Button(menu, text="Settings" , font=("arial", 25), command=lambda:apps.settings(displayFrame, controls, user)).place(x=10, y=610, height=50, width=230)
-    Button(menu, text="Logout"   , font=("arial", 25), command=login).place(x=10, y=550, height=50, width=230)
+    Button(menu, text="Logout"   , font=("arial", 25), command=loginScreen).place(x=10, y=550, height=50, width=230)
+    apps.password(displayFrame, controls, user)
 
-def login():
-    for widget in root.winfo_children():
-        widget.destroy()
-
-    def checkLogin():
+def loginScreen():
+    for widget in root.winfo_children(): widget.destroy()
+        
+    def login():
         def otp():
             def on_return(event): authenticate()
             def authenticate():
@@ -110,9 +111,8 @@ def login():
 
             Label(rect, text="Account Created!", font=('arial', 25), bg="white").place(x=185, y=130)
         def returnB():
-            for widget in rect.winfo_children():
-                widget.destroy()
-            login()
+            for widget in rect.winfo_children():widget.destroy()
+            loginScreen()
         for widget in rect.winfo_children():
                 widget.destroy()
         Label(rect, text="Username:", bg="white", font=("arial", 26)).place(x=20, y=20)
@@ -125,7 +125,7 @@ def login():
 
         Button(rect, text="Register", font=("arial", 28), command=addToFile).place(x=20, y=130, height=60, width=150)
         Button(rect, text="Back", font=('arial', 28), command=returnB).place(x=375, y=190, height=45, width=110)
-    def on_return(event): checkLogin()
+    def on_return(event): login()
     rect = Canvas(root, width=500, height=250, bg="white", highlightthickness=0)
     rect.place(relx=0.5, rely=0.5, anchor=CENTER)
     
@@ -146,9 +146,9 @@ def login():
     p.place(x=220, y=130, width=200, height=35)
 
     p.bind("<Return>", on_return)
-    Button(rect, text="Login", font=("arial", 30), command=checkLogin).place(x=60, y=180, height=60, width=150)
+    Button(rect, text="Login", font=("arial", 30), command=login).place(x=60, y=180, height=60, width=150)
     Button(rect, text="Register", font=("arial", 28), command=register).place(x=300, y=180, height=60, width=150)
 
-login()
+loginScreen()
 
 root.mainloop()
