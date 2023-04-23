@@ -1,6 +1,5 @@
 from cryptography.fernet import Fernet
 from hashlib import sha256
-import base64
 import pyotp
 import json
 
@@ -112,48 +111,6 @@ def decryptCRD(user, name, num, date, ccv):
 		else:
 			decryptedC += chr(ord(letter) - 5) 
 	return decryptedN, decryptedNU, decryptedD, decryptedC
-
-def encryptCRO(user, addr, priv, name):
-	encryptedA, encryptedP, encryptedN = "", "", ""
-	key = get_key(user)	
-
-	for letter in addr:
-		if letter == " ":
-			encryptedA += " "
-		else:
-			encryptedA += chr(ord(letter) + 5)
-	for letter in priv:
-		if letter == " ":
-			encryptedP += " "
-		else:
-			encryptedP += chr(ord(letter) + 5)
-	for letter in name:
-		if letter == " ":
-			encryptedN += " "
-		else:
-			encryptedN += chr(ord(letter) + 5)
-	return Fernet(key).encrypt(encryptedA.encode()).decode(), Fernet(key).encrypt(encryptedP.encode()).decode(), Fernet(key).encrypt(encryptedN.encode()).decode()
-def decryptCRO(user, addr, priv, name):
-	decryptedA, decryptedP, decryptedN = "", "", ""
-	key = get_key(user)	
-
-	addr, priv, name = Fernet(key).decrypt(addr.encode()).decode(), Fernet(key).decrypt(priv.encode()).decode(), Fernet(key).decrypt(name.encode()).decode()
-	for letter in addr:
-		if letter == " ":
-			decryptedA += " "
-		else:
-			decryptedA += chr(ord(letter) - 5)
-	for letter in priv:
-		if letter == " ":
-			decryptedP += " "
-		else:
-			decryptedP += chr(ord(letter) - 5)
-	for letter in name:
-		if letter == " ":
-			decryptedN += " "
-		else:
-			decryptedN += chr(ord(letter) - 5)
-	return decryptedA, decryptedP, decryptedN
 
 def encryptpsw(pasw):
 	encryptedP = ""
