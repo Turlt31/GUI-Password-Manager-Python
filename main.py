@@ -1,6 +1,5 @@
 from cryption import encryptpsw, make_key
 from tkinter import *
-import tkinter.font as tkFont
 import pyotp
 import json
 import apps
@@ -20,18 +19,16 @@ def main(user):
     menu.place(x=0, y=0)
 
     def scroll_canvas(event):
-        if event.delta:
-            display.yview_scroll(-1 * int(event.delta/120), "units")
+        if event.delta: display.yview_scroll(-1 * int(event.delta/120), "units")
         else:
-            if event.num == 5:
-                display.yview_scroll(1, "units")
-            else:
-                display.yview_scroll(-1, "units")
+            if event.num == 5: display.yview_scroll(1, "units")
+            else: display.yview_scroll(-1, "units")
+                
 
-    display = Canvas(root, scrollregion=(0,0,1000,2000))
-    display.place(x=250, y=130, width=1016, height=700)
+    display = Canvas(root, scrollregion=(0,0,0,3000))
+    display.place(x=250, y=130, width=1016, height=535)
 
-    displayFrame = Frame(display, width=1016, height=2000)
+    displayFrame = Frame(display, width=1016, height=3000)
 
     vscroll = Scrollbar(root, orient="vertical", command=display.yview)
     vscroll.place(x=1265, y=130, height=535, anchor="ne")
@@ -91,7 +88,7 @@ def loginScreen():
 
                 if otpON: otp(); e.destroy()
                 else: main(user.strip('\n')); e.destroy()
-            elif pswd == [0] or user == i[1].strip('\n'): e.config(text="Error: Incorrect Password or Username")
+            elif pswd == i[0] or user == i[1].strip('\n'): e.config(text="Error: Incorrect Password or Username")
             else: e.config(text="Error: Account does not exist")
     def register():
         def addToFile():
@@ -113,8 +110,8 @@ def loginScreen():
         def returnB():
             for widget in rect.winfo_children():widget.destroy()
             loginScreen()
-        for widget in rect.winfo_children():
-                widget.destroy()
+        for widget in rect.winfo_children(): widget.destroy()
+                
         Label(rect, text="Username:", bg="white", font=("arial", 26)).place(x=20, y=20)
         Label(rect, text="Password:", bg="white", font=("arial", 26)).place(x=20, y=70)
 
@@ -134,18 +131,17 @@ def loginScreen():
     rect.create_line(500, 0, 500, 250, fill="black", width=10)
     rect.create_line(0, 250, 500, 250, fill="black", width=10)
 
-    welcome = tkFont.Font(family="arial", size=30, weight="bold")
-
-    Label(rect,text="Please Login", bg="white", font=welcome).place(x=125, y=15)
+    Label(rect,text="Please Login", bg="white", font=('arial', 30, 'bold')).place(x=125, y=15)
     Label(rect, text="Username:", bg="white", font=("arial", 26)).place(x=40, y=70)
     Label(rect, text="Password:", bg="white", font=("arial", 26)).place(x=40, y=120)
 
     u = Entry(rect, font=("arial", 18))
     u.place(x=220, y=80, width=200, height=35)
+    
     p = Entry(rect, font=("arial", 18), show="●")
     p.place(x=220, y=130, width=200, height=35)
-
     p.bind("<Return>", on_return)
+
     Button(rect, text="Login", font=("arial", 30), command=login).place(x=60, y=180, height=60, width=150)
     Button(rect, text="Register", font=("arial", 28), command=register).place(x=300, y=180, height=60, width=150)
 
