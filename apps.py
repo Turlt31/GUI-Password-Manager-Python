@@ -1,6 +1,6 @@
-from PIL import ImageTk, Image
 from tkinter import *
 from cryption import *
+from PIL import ImageTk, Image
 import random
 import string
 import shutil
@@ -9,10 +9,9 @@ import json
 import os
 
 showP = True
-showC = True
+showC = False
 
-def password(display, controls, user):
-    global showP
+def password(display, controls, user):  
     for widget in controls.winfo_children(): widget.destroy()
             
     def add(user):
@@ -121,33 +120,30 @@ def password(display, controls, user):
         Button(edit, text="Save", font=('arial', 20), command=lambda:save(user)).place(x=20, y=290, height=30, width=150)
         Button(edit, text="Load", font=('arial', 20), command=lambda:load(user)).place(x=180, y=290, height=30, width=150)
     def updateP(show, name):
-        for widget in display.winfo_children():
-            widget.destroy()
+        for widget in display.winfo_children(): widget.destroy()
         
-        f = open(f'files/{name}/password.txt', 'r')
-        posY = 0
-        count = 1
-        for line in f:
-            entitySplit = line.split(",")
-            site, user, pwd = decryptPWD(name, entitySplit[0], entitySplit[1], entitySplit[2])
-            sVar, uVar, pVar, cVar = StringVar(), StringVar(), StringVar(), StringVar()
-			
-            cVar.set(count)
-            sVar.set(site)
-            uVar.set(user)
-            pVar.set(pwd)
-            if show:
-                Entry(display, textvariable=cVar, font=('arial', 20, 'bold'), justify="center").place(x=0,y=posY, height=50, width=40)
-                Entry(display, textvariable=sVar, font=('arial', 20)).place(x=40,y=posY, height=50, width=163)
-                Entry(display, textvariable=uVar, font=('arial', 20)).place(x=193, y=posY, height=50, width=550)
-                Entry(display, textvariable=pVar, font=('arial', 20), show="●").place(x=740, y=posY, height=50, width=260)
-            else:
-                Entry(display, textvariable=cVar, font=('arial', 20, 'bold'), justify="center").place(x=0,y=posY, height=50, width=40)
-                Entry(display, textvariable=sVar, font=('arial', 20)).place(x=40,y=posY, height=50, width=153)
-                Entry(display, textvariable=uVar, font=('arial', 20)).place(x=193, y=posY, height=50, width=550)
-                Entry(display, textvariable=pVar, font=('arial', 20)).place(x=740, y=posY, height=50, width=260)
-            posY += 50
-            count += 1
+        with open(f'files/{name}/password.txt', 'r') as f:
+            posY = 0
+            count = 1
+            for line in f:
+                entitySplit = line.split(",")
+                site, user, pwd = decryptPWD(name, entitySplit[0], entitySplit[1], entitySplit[2])
+                sVar, uVar, pVar, cVar = StringVar(), StringVar(), StringVar(), StringVar()
+                cVar.set(count); sVar.set(site); uVar.set(user); pVar.set(pwd)
+            
+                if show:
+                    Entry(display, textvariable=cVar, font=('arial', 20, 'bold'), justify="center").place(x=0,y=posY, height=50, width=40)
+                    Entry(display, textvariable=sVar, font=('arial', 20)).place(x=40,y=posY, height=50, width=163)
+                    Entry(display, textvariable=uVar, font=('arial', 20)).place(x=193, y=posY, height=50, width=550)
+                    Entry(display, textvariable=pVar, font=('arial', 20), show="●").place(x=740, y=posY, height=50, width=260)
+                else:
+                    Entry(display, textvariable=cVar, font=('arial', 20, 'bold'), justify="center").place(x=0,y=posY, height=50, width=40)
+                    Entry(display, textvariable=sVar, font=('arial', 20)).place(x=40,y=posY, height=50, width=153)
+                    Entry(display, textvariable=uVar, font=('arial', 20)).place(x=193, y=posY, height=50, width=550)
+                    Entry(display, textvariable=pVar, font=('arial', 20)).place(x=740, y=posY, height=50, width=260)
+                
+                posY += 48
+                count += 1
         Label(controls, text="Passwords", font=('arial', 40), bg="#4a4a4a").place(x=355, y=10)
         Label(controls, text=f"Count: {count-1}", font=('arial', 25), bg="#4a4a4a").place(x=400, y=65)
     def showPassword(user):
@@ -168,44 +164,41 @@ def password(display, controls, user):
     updateP(showP, user)
 
 def card(display, controls, user):
-    global showC
     for widget in controls.winfo_children(): widget.destroy()
             
     def updateC(show, user):
         for widget in display.winfo_children(): widget.destroy()
-            
-        f = open(f'files/{user}/card.txt', 'r')
-        posY = 0
-        count = 1
-        for line in f:
-            entitySplit = line.split(",")
-            name, num, date, ccv = decryptCRD(user, entitySplit[0], entitySplit[1], entitySplit[2], entitySplit[3])
-            nVar, nuVar, dVar, cVar, coVar = StringVar(), StringVar(), StringVar(), StringVar(), StringVar()
-            
-            coVar.set(count)
-            nVar.set(name)
-            dVar.set(date)
-            cVar.set(ccv)
-            if show == True:
-                size = len(num)   
-                if size == 19:
-                    nuVar.set(num.replace(num[size - 9:], "●●●● ●●●●"))
-                elif size == 16:
-                    nuVar.set(num.replace(num[size - 8:], "●●●●●●●●"))
-                Entry(display, textvariable=coVar, font=('arial', 20, 'bold'), justify="center").place(x=0,   y=posY, height=50, width=40)
-                Entry(display, textvariable=nVar,  font=('arial', 22)).place(x=40,  y=posY, height=50, width=350)
-                Entry(display, textvariable=nuVar, font=('arial', 22)).place(x=350, y=posY, height=50, width=350)
-                Entry(display, textvariable=dVar,  font=('arial', 22), justify="center").place(x=700, y=posY, height=50, width=150)
-                Entry(display, textvariable=cVar,  font=('arial', 22), show="●").place(x=850, y=posY, height=50, width=150)
-            elif show == False:
-                nuVar.set(num)
-                Entry(display, textvariable=coVar, font=('arial', 20, 'bold'), justify="center").place(x=0,   y=posY, height=50, width=40)
-                Entry(display, textvariable=nVar,  font=('arial', 22)).place(x=40,  y=posY, height=50, width=350)
-                Entry(display, textvariable=nuVar, font=('arial', 22)).place(x=350, y=posY, height=50, width=350)
-                Entry(display, textvariable=dVar,  font=('arial', 22), justify="center").place(x=700, y=posY, height=50, width=150)
-                Entry(display, textvariable=cVar,  font=('arial', 22)).place(x=850, y=posY, height=50, width=150)
-            posY += 50
-            count += 1
+        
+        with open(f'files/{user}/card.txt', 'r') as f:
+            posY = 0
+            count = 1
+            for line in f:
+                entitySplit = line.split(",")
+                name, num, date, ccv = decryptCRD(user, entitySplit[0], entitySplit[1], entitySplit[2], entitySplit[3])
+                nVar, nuVar, dVar, cVar, coVar = StringVar(), StringVar(), StringVar(), StringVar(), StringVar()
+                coVar.set(count); nVar.set(name); dVar.set(date); cVar.set(ccv)
+                
+                if show == True:
+                    size = len(num)   
+                    if size == 19:
+                        nuVar.set(num.replace(num[size - 9:], "●●●● ●●●●"))
+                    elif size == 16:
+                        nuVar.set(num.replace(num[size - 8:], "●●●●●●●●"))
+                    Entry(display, textvariable=coVar, font=('arial', 20, 'bold'), justify="center").place(x=0,   y=posY, height=50, width=40)
+                    Entry(display, textvariable=nVar,  font=('arial', 22)).place(x=40,  y=posY, height=50, width=350)
+                    Entry(display, textvariable=nuVar, font=('arial', 22)).place(x=350, y=posY, height=50, width=350)
+                    Entry(display, textvariable=dVar,  font=('arial', 22), justify="center").place(x=700, y=posY, height=50, width=150)
+                    Entry(display, textvariable=cVar,  font=('arial', 22), show="●").place(x=850, y=posY, height=50, width=150)
+                elif show == False:
+                    nuVar.set(num)
+                    Entry(display, textvariable=coVar, font=('arial', 20, 'bold'), justify="center").place(x=0,   y=posY, height=50, width=40)
+                    Entry(display, textvariable=nVar,  font=('arial', 22)).place(x=40,  y=posY, height=50, width=350)
+                    Entry(display, textvariable=nuVar, font=('arial', 22)).place(x=350, y=posY, height=50, width=350)
+                    Entry(display, textvariable=dVar,  font=('arial', 22), justify="center").place(x=700, y=posY, height=50, width=150)
+                    Entry(display, textvariable=cVar,  font=('arial', 22)).place(x=850, y=posY, height=50, width=150)
+                
+                posY += 50
+                count += 1
         Label(controls, text="Cards", font=('arial', 40), bg="#4a4a4a").place(x=390, y=10)
         Label(controls, text=f"Count: {count-1}", font=('arial', 25), bg="#4a4a4a").place(x=400, y=65)
     def add(user):
@@ -266,12 +259,8 @@ def card(display, controls, user):
             i = int(num.get())
             line = lines[i-1]
             line = line.split(',')
-            ENname, ENnum, ENdate, ENccv = line[0], line[1], line[2], line[3]
             DEname, DEnum, DEdate, DEccv = decryptCRD(user, line[0], line[1], line[2], line[3])
-            nVar.set(DEname)
-            nuVar.set(DEnum)
-            dVar.set(DEdate)
-            cVar.set(DEccv)
+            nVar.set(DEname); nuVar.set(DEnum); dVar.set(DEdate); cVar.set(DEccv)
 
         def save(user):
                 newName, newNum, newDate, newCcv = encryptCRD(user, n.get(), nu.get(), d.get(), c.get())
@@ -454,6 +443,11 @@ def settings(display, controls, user):
         otpText.place(x=15, y=70)
         activeOTP = Button(display, text=data, font=('arial', 25), command=lambda:active())
         activeOTP.place(x=500, y=10, height=50, width=80)
+    def idkYet():
+        for widget in display.winfo_children(): widget.destroy()
+        option.set("Idk Yet")
+        s.place(x=410, y=75)
+        print("I need an idea pls help")
 
     Label(controls, text="Settings", font=('arial', 40), bg="#4a4a4a").place(x=380, y=10)
     s = Label(controls, textvariable=option, font=('arial', 30), bg="#4a4a4a")
@@ -461,3 +455,5 @@ def settings(display, controls, user):
     Button(controls, text="Change Password", font=('arial', 20), command=changePWD).place(x=10, y=10, height=50, width=230)
     Button(controls, text="Delete Account",  font=('arial', 20), command=deleteACC).place(x=10, y=70, height=50, width=230)
     Button(controls, text="2 FA",  font=('arial', 20), command=otp).place(x=776, y=10, height=50, width=230)
+    Button(controls, text="idk Yet",  font=('arial', 20), command=idkYet).place(x=776, y=70, height=50, width=230)
+

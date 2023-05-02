@@ -24,10 +24,8 @@ def main(user):
             if event.num == 5: display.yview_scroll(1, "units")
             else: display.yview_scroll(-1, "units")
                 
-
     display = Canvas(root, scrollregion=(0,0,0,3000))
     display.place(x=250, y=130, width=1016, height=535)
-
     displayFrame = Frame(display, width=1016, height=3000)
 
     vscroll = Scrollbar(root, orient="vertical", command=display.yview)
@@ -99,11 +97,10 @@ def loginScreen():
             os.mkdir(f"files/{username}/config")
 
             with open('files/login.txt', 'a') as f: f.write(f"{encryptpsw(password)},{username}\n")
-
+            with open(f'files/{username}/config/otp.json', 'w') as f: json.dump({"active":False, "key":""}, f)
             [open(f"files/{username}/{file}", 'w').close() for file in ["card.txt", "password.txt", "notes.txt"]]
             [open(f"files/{username}/config/{file}", 'w').close() for file in ["otp.json"]]
 
-            with open(f'files/{username}/config/otp.json', 'w') as f: json.dump({"active":False, "key":""}, f)
             make_key(username)
 
             Label(rect, text="Account Created!", font=('arial', 25), bg="white").place(x=185, y=130)
