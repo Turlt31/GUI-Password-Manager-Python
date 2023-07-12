@@ -27,4 +27,4 @@ Move the .exe file in to the same directory where the .py file is
 <br>
 If you have any suggestions 
 
-DM me on discord: Turtl3#8839
+DM me on discord: .turtl3.
